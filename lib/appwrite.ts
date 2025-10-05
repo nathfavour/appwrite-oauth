@@ -1,8 +1,19 @@
 import { Client, Account } from "appwrite";
 
+/**
+ * Cached Appwrite client and account instances for browser usage.
+ * Using singleton pattern to avoid creating multiple client connections.
+ */
 let cachedClient: Client | null = null;
 let cachedAccount: Account | null = null;
 
+/**
+ * Creates and configures an Appwrite client for browser use.
+ * The client is cached to ensure we only create one instance per session.
+ * 
+ * @returns Configured Appwrite Client instance
+ * @throws Error if required environment variables are missing
+ */
 function createBrowserClient(): Client {
   if (cachedClient) return cachedClient;
 
@@ -24,6 +35,18 @@ function createBrowserClient(): Client {
   return client;
 }
 
+/**
+ * Returns an Appwrite Account instance for authentication operations.
+ * This should be used for all OAuth and session management operations.
+ * 
+ * @returns Appwrite Account instance
+ * 
+ * @example
+ * ```typescript
+ * const account = getAccount();
+ * const user = await account.get();
+ * ```
+ */
 export function getAccount(): Account {
   if (cachedAccount) return cachedAccount;
   const client = createBrowserClient();
